@@ -1,0 +1,52 @@
+### 本次项目的日志目录
+logs/
+
+### 构建后的产物不要
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### 无需测试类
+test/
+
+### 无需mvn版本的管理
+.mvn/
+#!.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### MAC的文件夹配置
+.DS_Store
+.DS_Store?
+
+# Windows的文件夹配置
+Desktop.ini

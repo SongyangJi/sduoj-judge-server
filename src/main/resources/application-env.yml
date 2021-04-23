@@ -1,0 +1,24 @@
+env:
+
+#  home: /home/songyangji/testMyJudgeServer
+  home: /home/sduoj/testMyJudgeServer
+
+# yml 中 ~ 表示空值
+  password: ~
+#  password: 123456
+
+  shell: /usr/bin/bash
+
+  sandbox: /usr/bin/sandbox
+
+  cxx:
+    cpp: /usr/bin/g++
+    c: /usr/bin/gcc
+
+  java:
+    java-compile: /usr/bin/javac
+    java-run: /usr/bin/java
+
+  python:
+    python3: /usr/bin/python3
+    python2: /usr/bin/python2.7

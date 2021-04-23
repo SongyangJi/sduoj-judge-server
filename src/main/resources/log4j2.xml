@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+
+<!-- 监测配置文件的间隔为60秒-->
+<Configuration status="warn" monitorInterval="60">
+
+    <!--全局参数-->
+    <Properties>
+
+        <Property name="PROJECT_NAME">sduoj-judge-server</Property>>
+
+        <!-- 日志根目录 -->
+        <Property name="LOG_HOME">logs</Property>
+
+        <!-- 平台基础日志 -->
+        <Property name="PLATFORM">platform</Property>
+
+        <!-- OS相关日志 -->
+        <Property name="OS">os</Property>
+
+        <!-- 沙箱日志 -->
+        <Property name="SANDBOX">sandbox</Property>
+
+        <!-- 判题日志 -->
+        <Property name="JUDGE">judge</Property>
+
+        <!-- 业务类日志 -->
+        <Property name="SERVICE">service</Property>
+
+
+    </Properties>
+
+    <Appenders>
+
+        <!-- 输出到命令行 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+
+        <!-- 平台基础日志 -->
+        <!-- 滚动文件日志时间粒度到分钟 -->
+        <!-- 滚动日志文件夹按照月来划分、一个文件夹下最多100个文件 -->
+        <RollingRandomAccessFile name="PlatformRollingFile"
+                                 fileName="${LOG_HOME}/${PLATFORM}-log/${PROJECT_NAME}_status_${PLATFORM}.log"
+                                 filePattern="${LOG_HOME}/${PLATFORM}-log/$${date:yyyy-MM}/${PROJECT_NAME}_status_${PLATFORM}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 每120分钟 或者 日志文件超过1MB滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="120" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+
+            <!-- 滚动出来的日志最多存100个 -->
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}/${PLATFORM}-log" maxDepth="2">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="${date:yyyy-MM}/*.log"/>
+                    <!-- 1m 表示如果超过指定文件数时，自动清理掉1分钟以前的日志文件 -->
+                    <IfLastModified age="1m"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+
+        <!-- 消息队列往来消息的日志 -->
+        <!-- 滚动文件日志时间粒度到分钟 -->
+        <!-- 滚动日志文件夹按照月来划分、一个文件夹下最多100个文件 -->
+        <RollingRandomAccessFile name="ServiceRollingFile"
+                                 fileName="${LOG_HOME}/${SERVICE}-log/${PROJECT_NAME}_status_${SERVICE}.log"
+                                 filePattern="${LOG_HOME}/${SERVICE}-log/$${date:yyyy-MM}/${PROJECT_NAME}_status_${SERVICE}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 每120分钟 或者 日志文件超过1MB滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="120" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+
+            <!-- 滚动出来的日志最多存100个 -->
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}/${PLATFORM}-log" maxDepth="2">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="${date:yyyy-MM}/*.log"/>
+                    <!-- 1m 表示如果超过指定文件数时，自动清理掉1分钟以前的日志文件 -->
+                    <IfLastModified age="1m"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+
+        <!-- 判题日志 -->
+        <!-- 滚动文件日志时间粒度到分钟 -->
+        <!-- 滚动日志文件夹按照月来划分、一个文件夹下最多100个文件 -->
+        <RollingRandomAccessFile name="JudgeCodeRollingFile"
+                                 fileName="${LOG_HOME}/${JUDGE}-log/${PROJECT_NAME}_status_${JUDGE}.log"
+                                 filePattern="${LOG_HOME}/${JUDGE}-log/$${date:yyyy-MM}/${PROJECT_NAME}_status_${JUDGE}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 每120分钟 或者 日志文件超过1MB滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="120" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+
+            <!-- 滚动出来的日志最多存100个 -->
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}/${PLATFORM}-log" maxDepth="2">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="${date:yyyy-MM}/*.log"/>
+                    <!-- 1m 表示如果超过指定文件数时，自动清理掉1分钟以前的日志文件 -->
+                    <IfLastModified age="1m"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <!-- 沙箱日志 -->
+        <!-- 滚动文件日志时间粒度到分钟 -->
+        <!-- 滚动日志文件夹按照月来划分、一个文件夹下最多100个文件 -->
+        <RollingRandomAccessFile name="SandboxRollingFile"
+                                 fileName="${LOG_HOME}/${SANDBOX}-log/${PROJECT_NAME}_status_${SANDBOX}.log"
+                                 filePattern="${LOG_HOME}/${SANDBOX}-log/$${date:yyyy-MM}/${PROJECT_NAME}_status_${SANDBOX}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 每120分钟 或者 日志文件超过1MB滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="120" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+
+            <!-- 滚动出来的日志最多存100个 -->
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}/${PLATFORM}-log" maxDepth="2">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="${date:yyyy-MM}/*.log"/>
+                    <!-- 1m 表示如果超过指定文件数时，自动清理掉1分钟以前的日志文件 -->
+                    <IfLastModified age="1m"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+
+
+        <!-- 操作系统相关日志 -->
+        <!-- 滚动文件日志时间粒度到分钟 -->
+        <!-- 滚动日志文件夹按照月来划分、一个文件夹下最多100个文件 -->
+        <RollingRandomAccessFile name="OSRollingFile"
+                                 fileName="${LOG_HOME}/${OS}-log/${PROJECT_NAME}_status_${OS}.log"
+                                 filePattern="${LOG_HOME}/${OS}-log/$${date:yyyy-MM}/${PROJECT_NAME}_status_${OS}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 每120分钟 或者 日志文件超过1MB滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="120" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+
+            <!-- 滚动出来的日志最多存100个 -->
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}/${PLATFORM}-log" maxDepth="2">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="${date:yyyy-MM}/*.log"/>
+                    <!-- 1m 表示如果超过指定文件数时，自动清理掉1分钟以前的日志文件 -->
+                    <IfLastModified age="1m"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+
+    </Appenders>
+
+
+    <Loggers>
+
+        <Root level="info">
+<!--            <AppenderRef ref="Console"/>-->
+            <AppenderRef ref="PlatformRollingFile"/>
+        </Root>
+
+        <Logger name="Service" level="info" additivity="false">
+<!--            <AppenderRef ref="Console"/>-->
+            <AppenderRef ref="ServiceRollingFile"/>
+        </Logger>
+
+        <Logger name="JudgeCode" level="info" additivity="false">
+<!--            <AppenderRef ref="Console"/>-->
+            <AppenderRef ref="JudgeCodeRollingFile"/>
+        </Logger>
+
+
+        <Logger name="Sandbox" level="info" additivity="false">
+<!--            <AppenderRef ref="Console"/>-->
+            <AppenderRef ref="SandboxRollingFile"/>
+        </Logger>
+
+        <Logger name="OS" level="info" additivity="false">
+<!--            <AppenderRef ref="Console"/>-->
+            <AppenderRef ref="OSRollingFile"/>
+        </Logger>
+
+    </Loggers>
+
+
+</Configuration>

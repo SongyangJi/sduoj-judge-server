@@ -1,0 +1,15 @@
+spring:
+  rabbitmq:
+    host: localhost
+#    host: 47.117.127.179
+    port: 5672
+    publisher-confirm-type: correlated
+    username: guest
+    password: guest
+#    username: jsy-mac
+#    password: 8888
+
+rabbitmq:
+  message-queue:
+    request-queue: rabbitmq-to-handle-queue
+    response-queue: rabbitmq-to-reply-queue
