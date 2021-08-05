@@ -21,8 +21,8 @@ import java.nio.file.Paths;
  * @ProjectName: sduoj-judge-server
  * @Version 1.0
  * @Description: 执行 JudgeCodeTask任务 的切面类
- *  目前它的功能：
- *  1. 实现对本地不存在文件的下载
+ * 目前它的功能：
+ * 1. 实现对本地不存在文件的下载
  */
 
 @Component
@@ -48,8 +48,8 @@ public class JudgeCodeTaskAspect {
         Path problemDirPath = Paths.get(environmentConfig.getHome()).resolve(problemID);
         // 本地不存在，从ftp下载
         if (!Files.exists(problemDirPath)) {
-            log.info("file: " + problemDirPath +" not exists。from FTP download these files");
-            sftpFilesService.downloadProblemIOFiles(problemID,problemDirPath);
+            log.info("file: " + problemDirPath + " not exists。from FTP download these files");
+            sftpFilesService.downloadProblemIOFiles(problemID, problemDirPath);
         }
     }
 
