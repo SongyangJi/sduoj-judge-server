@@ -1,0 +1,7 @@
+ssh:
+  host: 121.196.101.7 # SSH 地址
+  port: 22 # SSH 端口
+  username: sduoj # SSH 用户名
+  password: pta!123 # SSH 密码
+  private-key: ~ # 登录秘钥
+  root-dir: shared/
