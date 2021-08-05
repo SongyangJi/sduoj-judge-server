@@ -7,22 +7,16 @@ import com.sduoj.judgeserver.dto.JudgeResult;
 import com.sduoj.judgeserver.entity.RunCodeConfig;
 import com.sduoj.judgeserver.entity.RunCodeResult;
 import com.sduoj.judgeserver.exception.external.ExternalException;
-import com.sduoj.judgeserver.exception.internal.InternalException;
-import com.sduoj.judgeserver.exception.internal.ParametersMissingException;
+import com.sduoj.judgeserver.exception.internal.*;
 import com.sduoj.judgeserver.exception.external.SandBoxArgumentsException;
-import com.sduoj.judgeserver.exception.internal.ProcessException;
-import com.sduoj.judgeserver.exception.internal.SandBoxRunError;
-import com.sduoj.judgeserver.handler.MessageQueueService;
 import com.sduoj.judgeserver.util.FileUtil;
-import lombok.AccessLevel;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -38,19 +32,17 @@ import java.nio.file.*;
 @Slf4j(topic = "JudgeCode")
 @Service("JudgeCodeTask")
 @Scope("prototype")
-@Setter
 public class JudgeCodeTask {
 
-
-    @Setter(AccessLevel.NONE)
-    @Resource
     EnvironmentConfig environmentConfig;
-    @Resource
+
     FileUtil fileUtil;
 
-    @Resource
-    // 调用消息队列服务
-    MessageQueueService messageQueueService;
+    public JudgeCodeTask(@Autowired EnvironmentConfig environmentConfig, @Autowired FileUtil fileUtil) {
+        this.environmentConfig = environmentConfig;
+        this.fileUtil = fileUtil;
+    }
+
 
     // 客户端传来的请求
     @NonNull
@@ -68,9 +60,9 @@ public class JudgeCodeTask {
     private Path uniquePath;
 
     // 题目下的doc目录(相对)
-    private static Path docDirPath;
+    private static final Path docDirPath;
     // 标准答案路径(相对)
-    private static Path answerPath;
+    private static final Path answerPath;
 
 
     static {
@@ -286,6 +278,9 @@ public class JudgeCodeTask {
         return judgeResponse;
     }
 
+    public void setJudgeRequest(JudgeRequest judgeRequest) {
+        this.judgeRequest = judgeRequest;
+    }
 
     /**
      * 使用@Lookup 注解 返回原型bean,本质上是通过BeanFactory返回原型bean
