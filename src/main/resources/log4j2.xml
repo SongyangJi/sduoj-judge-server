@@ -27,6 +27,9 @@
         <!-- 业务类日志 -->
         <Property name="SERVICE">service</Property>
 
+        <!-- FTP服务器下载日志 -->
+        <Property name="SFTP">sftp</Property>
+
 
     </Properties>
 
