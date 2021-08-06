@@ -173,6 +173,33 @@
         </RollingRandomAccessFile>
 
 
+        <!-- FTP服务器相关日志 -->
+        <!-- 滚动文件日志时间粒度到分钟 -->
+        <!-- 滚动日志文件夹按照月来划分、一个文件夹下最多100个文件 -->
+        <RollingRandomAccessFile name="SFTPRollingFile"
+                                 fileName="${LOG_HOME}/${SFTP}-log/${PROJECT_NAME}_status_${SFTP}.log"
+                                 filePattern="${LOG_HOME}/${SFTP}-log/$${date:yyyy-MM}/${PROJECT_NAME}_status_${SFTP}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 每120分钟 或者 日志文件超过1MB滚动一次 -->
+                <TimeBasedTriggeringPolicy interval="120" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+
+            <!-- 滚动出来的日志最多存100个 -->
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}/${PLATFORM}-log" maxDepth="2">
+                    <!-- glob 项为需要自动清理日志的pattern -->
+                    <IfFileName glob="${date:yyyy-MM}/*.log"/>
+                    <!-- 1m 表示如果超过指定文件数时，自动清理掉1分钟以前的日志文件 -->
+                    <IfLastModified age="1m"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+
     </Appenders>
 
 
@@ -203,6 +230,12 @@
 <!--            <AppenderRef ref="Console"/>-->
             <AppenderRef ref="OSRollingFile"/>
         </Logger>
+
+        <Logger name="SFTP" level="info" additivity="false">
+            <!--            <AppenderRef ref="Console"/>-->
+            <AppenderRef ref="SFTPRollingFile"/>
+        </Logger>
+
 
     </Loggers>
 

@@ -24,7 +24,7 @@ import java.util.Vector;
  */
 
 @Service("sftpFilesService")
-@Slf4j
+@Slf4j(topic = "SFTP")
 public class SftpFilesServiceImpl implements SftpFilesService {
 
     EnvironmentConfig environmentConfig;

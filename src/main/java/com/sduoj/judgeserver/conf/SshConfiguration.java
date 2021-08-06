@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@Slf4j
+@Slf4j(topic = "SFTP")
 public class SshConfiguration {
 
     @Getter
