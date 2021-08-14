@@ -1,6 +1,7 @@
 env:
 
-#  home: /home/songyangji/testMyJudgeServer
+  #  home: /home/songyangji/testMyJudgeServer
+  #  home: /Users/jisongyang/Desktop/testMyJudgeServer
   home: /home/sduoj/testMyJudgeServer
 
 # yml 中 ~ 表示空值

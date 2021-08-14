@@ -1,13 +1,17 @@
 spring:
   rabbitmq:
-    host: localhost
+#    host: localhost
 #    host: 47.117.127.179
+    host: 121.196.101.7
+
     port: 5672
     publisher-confirm-type: correlated
-    username: guest
-    password: guest
+#    username: guest
+#    password: guest
 #    username: jsy-mac
 #    password: 8888
+    username: solve
+    password: solve
 
 rabbitmq:
   message-queue:
