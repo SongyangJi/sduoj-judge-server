@@ -1,5 +1,5 @@
 thread-pool:
   core-pool-size: 4
   max-pool-size: 4
-  queue-capacity: 0
+  queue-capacity: 100
   keep-alive-seconds: 300
