@@ -2,6 +2,8 @@ package com.sduoj.judgeserver.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 /**
  * @Author: Song yang Ji
  * @ProjectName: sduoj-judge-server
@@ -14,11 +16,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JudgeResponse {
-    JudgeResult judgeResult;
-
-    RunningDetails runningDetails;
-
-    String detailOfError;
-
+public class MultiJudgeRequest extends JudgeRequest {
+    @NonNull
+    List<String> pointList;
 }
