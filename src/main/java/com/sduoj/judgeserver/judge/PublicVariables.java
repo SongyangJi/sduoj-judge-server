@@ -21,7 +21,7 @@ public class PublicVariables {
     public static final String STANDARD_ANSWER_TXT = "standard_answer.txt";
 
     // 属于某一道题目的输入文件 (如果没有Special Judge的话，那么输入文件只有一份)
-    public static final String INPUT_TXT = "standard_input.txt";
+    public static final String STANDARD_INPUT_TXT = "standard_input.txt";
 
     // 代码编译、运行的输出文件
     public static final String OUTPUT_NAME = "output.txt";
