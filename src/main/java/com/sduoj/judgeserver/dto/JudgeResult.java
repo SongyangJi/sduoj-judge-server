@@ -22,7 +22,9 @@ public enum JudgeResult {
     TIME_LIMIT_ERROR("超出时间限制"),
 
     WRONG_ANSWER("答案错误"),
-    PRESENTATION_ERROR("格式错误");
+    PRESENTATION_ERROR("格式错误"),
+
+    FAIL("代码未通过");
 
     private final String description;
 
