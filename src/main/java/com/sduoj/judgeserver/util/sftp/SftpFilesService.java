@@ -13,6 +13,21 @@ import java.nio.file.Path;
 
 public interface SftpFilesService {
 
-    void downloadProblemIOFiles(String problemID,Path local) throws SftpException;
+    /**
+     * @param problemID 题目ID
+     * @param local     下载的本地的路径
+     * @throws SftpException Sftp 异常
+     */
+    void downloadProblemIOFiles(String problemID, Path local) throws SftpException;
+
+
+    /**
+     *
+     * @param problemID 题目ID
+     * @param testPointID 测试点ID
+     * @param local 下载的本地的路径
+     * @throws SftpException Sftp 异常
+     */
+    void downloadProblemTestPointIOFiles(String problemID, String testPointID, Path local) throws SftpException;
 
 }
