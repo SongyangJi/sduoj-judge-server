@@ -68,7 +68,7 @@ public abstract class RunCode {
     CPUCoreScheduler cpuCoreScheduler;
 
     @Setter
-    boolean toCompile = false;
+    boolean toCompile = true;
 
     // 接受传来的沙箱命令，如 sandbox
     protected boolean compile(String cmd) throws ProcessException, SandBoxRunError {
@@ -98,6 +98,16 @@ public abstract class RunCode {
 
 
     protected RunCodeResult runCode(String cmd) throws ProcessException, SandBoxRunError {
+
+        // 注意多测试点情况下必须刷新 output.txt 文件（因为沙箱写文件的默认行为会是追加，而不是覆盖）
+        Path oldOutFilePath = runCodeConfig.getUniquePath().resolve(relativeOutputPath);
+        try {
+            Files.deleteIfExists(oldOutFilePath);
+        } catch (IOException e) {
+            // 强制删除
+            fileUtil.removeFileForce(oldOutFilePath);
+        }
+
         RunCodeResult runCodeResult = new RunCodeResult();
         runCodeResult.setOutputPath(getAbsoluteOutputPath());
 
@@ -141,15 +151,6 @@ public abstract class RunCode {
         }
 
         runCodeResult.setSandBoxResult(sandBoxResult);
-
-        // 注意多测试点情况下必须刷新 output.txt 文件（因为沙箱写文件的默认行为会是追加，而不是覆盖）
-        Path oldOutFilePath = runCodeConfig.getUniquePath().resolve(relativeOutputPath);
-        try {
-            Files.delete(oldOutFilePath);
-        } catch (IOException e) {
-            // 强制删除
-            fileUtil.removeFileForce(oldOutFilePath);
-        }
 
         return runCodeResult;
     }
