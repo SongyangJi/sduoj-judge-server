@@ -11,6 +11,8 @@ import com.sduoj.judgeserver.exception.internal.SandBoxRunError;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +53,17 @@ public class RunJavaTask extends RunCode {
 
 
     private boolean compile() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
+        if(!toCompile) {
+            return true;
+        }
+
+        // 兜底检查
+        // 对于多测试点情况，只需编译一次
+        Path exePath = runCodeConfig.getUniquePath().resolve(super.getRunCodeConfig().getCodeTextPath().toString()+".class");
+        if(Files.exists(exePath)) {
+            return true;
+        }
+
         String cmd = generateCompileCommand();
         return compile(cmd);
     }

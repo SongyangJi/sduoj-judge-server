@@ -2,10 +2,13 @@ package com.sduoj.judgeserver.handler;
 
 import com.sduoj.judgeserver.dto.JudgeRequest;
 import com.sduoj.judgeserver.dto.JudgeResponse;
+import com.sduoj.judgeserver.dto.MultiJudgeRequest;
+import com.sduoj.judgeserver.dto.SingleJudgeResponse;
 import com.sduoj.judgeserver.exception.ServerBusyException;
 import com.sduoj.judgeserver.exception.external.ExternalException;
 import com.sduoj.judgeserver.exception.internal.InternalException;
-import com.sduoj.judgeserver.judge.JudgeCodeTask;
+import com.sduoj.judgeserver.judge.MultiJudgeCodeTask;
+import com.sduoj.judgeserver.judge.SimpleJudgeCodeTask;
 import com.sduoj.judgeserver.rpc.RpcRequest;
 import com.sduoj.judgeserver.rpc.RpcResponse;
 import com.sduoj.judgeserver.rpc.RpcStatus;
@@ -48,15 +51,16 @@ public class AsyncJobExecutor {
             case JUDGE_CODE:
                 try {
                     // 解析出 JudgeRequest
-                    JudgeRequest judgeRequest = JsonUtil.parse(rpcRequest.getRequestBody().getBody(), JudgeRequest.class);
+                    MultiJudgeRequest judgeRequest = JsonUtil.parse(rpcRequest.getRequestBody().getBody(), MultiJudgeRequest.class);
                     // 请求ID不可为空
                     if (judgeRequest.getRequestID() == null || judgeRequest.getRequestID().length() == 0) {
                         responseBody = new RpcResponse.ResponseBody(RpcStatus.ClientError, new ExternalException("请求ID缺失").getMessage());
                         rpcResponse.setResponseBody(responseBody);
                         return;
                     }
+
+                    MultiJudgeCodeTask judgeCodeTask = getJudgeCodeTask();
                     // 获取原型bean
-                    JudgeCodeTask judgeCodeTask = getJudgeCodeTask();
                     judgeCodeTask.setJudgeRequest(judgeRequest);
                     JudgeResponse judgeResponse = judgeCodeTask.judgeCode();
                     // 响应体
@@ -81,7 +85,7 @@ public class AsyncJobExecutor {
     }
 
     @Lookup
-    public JudgeCodeTask getJudgeCodeTask() {
+    public MultiJudgeCodeTask getJudgeCodeTask() {
         return null;
     }
 

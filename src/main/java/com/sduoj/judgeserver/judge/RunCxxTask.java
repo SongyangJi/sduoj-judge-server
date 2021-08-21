@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +62,18 @@ public class RunCxxTask extends RunCode {
     }
 
     private boolean compile() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
+        if(!toCompile) {
+            return true;
+        }
+
+        // 兜底检查
+        // 对于多测试点情况，只需编译一次
+        Path exePath = runCodeConfig.getUniquePath().resolve(PublicVariables.OUT_EXEC_FILE_NAME);
+
+        if(Files.exists(exePath)) {
+            return true;
+        }
+
         String cmd = generateCompileCommand();
         // 调用父类的编译
         return compile(cmd);
@@ -80,7 +94,7 @@ public class RunCxxTask extends RunCode {
         sandBoxArguments.setArguments(runCodeConfig.getJudgeLimit().getLimitArgsMap());
 
         Map<String, Object> map = new HashMap<>();
-        // ./a.out
+        // out
         map.put(SandBoxArguments.EXE_PATH, PublicVariables.OUT_EXEC_FILE_NAME);
         map.put(SandBoxArguments.INPUT_PATH, runCodeConfig.getInputPath().toString());
         map.put(SandBoxArguments.OUTPUT_PATH, PublicVariables.OUTPUT_NAME);

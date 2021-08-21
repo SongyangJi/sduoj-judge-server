@@ -58,6 +58,10 @@ public class FileUtil {
         return res;
     }
 
+    public void removeFileForce(Path path) throws ProcessException {
+        osUtil.execCommandBySuperUser("rm "+path.toAbsolutePath().toString());
+    }
+
 
     /**
      * 将文件或者目录的写权限开启（对anyone 都有读、写、执行权限）

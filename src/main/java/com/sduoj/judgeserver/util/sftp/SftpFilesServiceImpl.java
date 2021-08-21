@@ -38,6 +38,11 @@ public class SftpFilesServiceImpl implements SftpFilesService {
         this.sshConfiguration = sshConfiguration;
     }
 
+    /**
+     * @param problemID 题目ID
+     * @param local     下载的本地的路径
+     * @throws SftpException Sftp 异常
+     */
     @Override
     public void downloadProblemIOFiles(String problemID, Path local) throws SftpException {
         // 创建本地文件夹
@@ -55,8 +60,10 @@ public class SftpFilesServiceImpl implements SftpFilesService {
                 sftp.get(filePath, local.toString());
             }
         } catch (com.jcraft.jsch.SftpException e) {
+
             throw new SftpException(e.getMessage());
         } finally {
+            // 注意这里的连接关闭
             sftp.disconnect();
             try {
                 sftp.getSession().disconnect();
@@ -66,13 +73,42 @@ public class SftpFilesServiceImpl implements SftpFilesService {
         }
     }
 
-    private List<String> listFileNamesInDir(ChannelSftp sftp, String dir) throws com.jcraft.jsch.SftpException {
+    /**
+     * @param problemID   题目ID
+     * @param testPointID 测试点ID
+     * @param local       下载的本地的路径
+     * @throws SftpException Sftp 异常
+     */
+    @Override
+    public void downloadProblemTestPointIOFiles(String problemID, String testPointID, Path local) throws SftpException {
+        String remoteProblemFiles = sshConfiguration.getSshProperties().getRootDir() + problemID + "/" + testPointID + "/";
+        ChannelSftp sftp = sshConfiguration.getSftp();
+        try {
+            List<String> list = listFileNamesInDir(sftp, remoteProblemFiles);
+            for (String filePath : list) {
+                sftp.get(filePath, local.toString());
+            }
+        } catch (com.jcraft.jsch.SftpException e) {
+
+            throw new SftpException(e.getMessage());
+        } finally {
+            // 注意这里的连接关闭
+            sftp.disconnect();
+            try {
+                sftp.getSession().disconnect();
+            } catch (JSchException e) {
+                log.error("sftp fails to channel get session");
+            }
+        }
+    }
+
+    private List<String> listFileNamesInDir(ChannelSftp sftp, String remoteDir) throws com.jcraft.jsch.SftpException {
         List<String> list = new ArrayList<>();
-        Vector<ChannelSftp.LsEntry> ls = sftp.ls(dir);
+        Vector<ChannelSftp.LsEntry> ls = sftp.ls(remoteDir);
         for (ChannelSftp.LsEntry file : ls) {
             String filename = file.getFilename();
             if (filename.equals(".") || filename.equals("..")) continue;
-            list.add(dir + filename);
+            list.add(remoteDir + filename);
         }
         return list;
     }

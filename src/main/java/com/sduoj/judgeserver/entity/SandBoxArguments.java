@@ -79,9 +79,9 @@ public class SandBoxArguments {
     /**
      *
      */
-    private Map<String, Object> argsMap;
+    private final Map<String, Object> argsMap;
 
-    private Map<String, Class> argsClassMap;
+    private final Map<String, Class> argsClassMap;
 
     private static final List<String> emptyStringList = new ArrayList<>();
 
