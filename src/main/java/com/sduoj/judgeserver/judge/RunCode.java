@@ -1,6 +1,7 @@
 package com.sduoj.judgeserver.judge;
 
 import com.sduoj.judgeserver.dto.JudgeResponse;
+import com.sduoj.judgeserver.dto.SingleJudgeResponse;
 import com.sduoj.judgeserver.dto.JudgeResult;
 import com.sduoj.judgeserver.entity.RunCodeConfig;
 import com.sduoj.judgeserver.entity.RunCodeResult;
@@ -17,11 +18,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -67,6 +67,9 @@ public abstract class RunCode {
     @Resource
     CPUCoreScheduler cpuCoreScheduler;
 
+    @Setter
+    boolean toCompile = false;
+
     // 接受传来的沙箱命令，如 sandbox
     protected boolean compile(String cmd) throws ProcessException, SandBoxRunError {
         // 必须切换到题目所在目录
@@ -79,7 +82,7 @@ public abstract class RunCode {
         try {
             sandBoxResult = JsonUtil.parse(result, SandBoxResult.class);
         } catch (IOException e) {
-            log.error("沙箱结果 "+result+" 解析为Json对象时错误"+e.getMessage(),e);
+            log.error("沙箱结果 " + result + " 解析为Json对象时错误" + e.getMessage(), e);
             throw new SandBoxRunError("沙箱结果解析为Json对象时错误");
         }
 
@@ -119,7 +122,7 @@ public abstract class RunCode {
         try {
             sandBoxResult = JsonUtil.parse(result, SandBoxResult.class);
         } catch (IOException e) {
-            log.error("沙箱结果 "+result+" 解析为Json对象时错误"+e.getMessage(),e);
+            log.error("沙箱结果 " + result + " 解析为Json对象时错误" + e.getMessage(), e);
             throw new SandBoxRunError("沙箱结果解析为Json对象时错误");
         }
 
@@ -138,6 +141,16 @@ public abstract class RunCode {
         }
 
         runCodeResult.setSandBoxResult(sandBoxResult);
+
+        // 注意多测试点情况下必须刷新 output.txt 文件（因为沙箱写文件的默认行为会是追加，而不是覆盖）
+        Path oldOutFilePath = runCodeConfig.getUniquePath().resolve(relativeOutputPath);
+        try {
+            Files.delete(oldOutFilePath);
+        } catch (IOException e) {
+            // 强制删除
+            fileUtil.removeFileForce(oldOutFilePath);
+        }
+
         return runCodeResult;
     }
 
@@ -148,7 +161,7 @@ public abstract class RunCode {
     /**
      * 处理沙箱运行异常的公共代码
      *
-     * @param error
+     * @param error 沙箱错误枚举类
      */
     protected void handleSandBoxException(SandBoxResult.RESULT error) throws SandBoxRunError {
         switch (error) {
@@ -168,7 +181,7 @@ public abstract class RunCode {
                 break;
         }
 
-        /**
+        /*
          * 暂时不暴露任何详细的错误信息,仅仅告诉用户错了，以及什么错误，用于debug的信息暂不提供
          */
 
