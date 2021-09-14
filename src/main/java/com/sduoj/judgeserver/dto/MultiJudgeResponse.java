@@ -1,5 +1,6 @@
 package com.sduoj.judgeserver.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
  */
 
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @ToString
 @Setter
 @Getter
