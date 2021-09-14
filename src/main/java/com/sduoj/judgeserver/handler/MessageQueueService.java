@@ -28,6 +28,9 @@ public class MessageQueueService {
     @Resource
     RabbitTemplate rabbitTemplate;
 
+    @Resource
+    AsyncJobExecutor asyncJobExecutor;
+
 
     @RabbitListener(queues = {"${rabbitmq.message-queue.request-queue}"})
     public void receiveRpcRequest(String rpcRequestString) {
@@ -38,8 +41,7 @@ public class MessageQueueService {
         try {
             rpcRequest = JsonUtil.parse(rpcRequestString, RpcRequest.class);
             log.info("RPC请求为 {}", rpcRequest);
-            // 获取原型bean
-            AsyncJobExecutor asyncJobExecutor = getAsyncJobExecutor();
+            // 获取单例bean
             asyncJobExecutor.doJob(rpcRequest);
         } catch (IOException e) {
             rpcResponse = new RpcResponse.RpcResponseBuilder().
@@ -66,11 +68,6 @@ public class MessageQueueService {
         } catch (JsonProcessingException e) {
             log.error("json字符串解析错误:\n" + rpcResponse + "\n" + e.getMessage());
         }
-    }
-
-    @Lookup
-    public AsyncJobExecutor getAsyncJobExecutor() {
-        return null;
     }
 
 }

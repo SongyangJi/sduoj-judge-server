@@ -1,9 +1,7 @@
 package com.sduoj.judgeserver.handler;
 
-import com.sduoj.judgeserver.dto.JudgeRequest;
 import com.sduoj.judgeserver.dto.JudgeResponse;
 import com.sduoj.judgeserver.dto.MultiJudgeRequest;
-import com.sduoj.judgeserver.dto.SingleJudgeResponse;
 import com.sduoj.judgeserver.exception.ServerBusyException;
 import com.sduoj.judgeserver.exception.external.ExternalException;
 import com.sduoj.judgeserver.exception.internal.InternalException;
@@ -31,7 +29,6 @@ import java.io.IOException;
  */
 
 @Service
-@Scope("prototype")
 public class AsyncJobExecutor {
 
 
@@ -58,9 +55,8 @@ public class AsyncJobExecutor {
                         rpcResponse.setResponseBody(responseBody);
                         return;
                     }
-
-                    MultiJudgeCodeTask judgeCodeTask = getJudgeCodeTask();
                     // 获取原型bean
+                    MultiJudgeCodeTask judgeCodeTask = getJudgeCodeTask();
                     judgeCodeTask.setJudgeRequest(judgeRequest);
                     JudgeResponse judgeResponse = judgeCodeTask.judgeCode();
                     // 响应体
