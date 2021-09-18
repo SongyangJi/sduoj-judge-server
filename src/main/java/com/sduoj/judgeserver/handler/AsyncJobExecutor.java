@@ -50,7 +50,7 @@ public class AsyncJobExecutor {
                     // 解析出 JudgeRequest
                     MultiJudgeRequest judgeRequest = JsonUtil.parse(rpcRequest.getRequestBody().getBody(), MultiJudgeRequest.class);
                     // 请求ID不可为空
-                    if (judgeRequest.getRequestID() == null || judgeRequest.getRequestID().length() == 0) {
+                    if (judgeRequest.getRequestID().length() == 0) {
                         responseBody = new RpcResponse.ResponseBody(RpcStatus.ClientError, new ExternalException("请求ID缺失").getMessage());
                         rpcResponse.setResponseBody(responseBody);
                         return;
