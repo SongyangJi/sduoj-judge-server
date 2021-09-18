@@ -3,9 +3,9 @@ package com.sduoj.judgeserver.util.os;
 import com.sduoj.judgeserver.conf.EnvironmentConfig;
 import com.sduoj.judgeserver.exception.internal.ProcessException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import oshi.SystemInfo;
-import oshi.hardware.CentralProcessor;
+
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,12 +29,13 @@ public class CPUCoreScheduler {
     EnvironmentConfig environmentConfig;
 
 
+    OSBasicInfo osBasicInfo;
+
     private final LinkedBlockingQueue<Integer> cpuPool;
 
-    public CPUCoreScheduler() {
-        SystemInfo systemInfo = new SystemInfo();
-        CentralProcessor processor = systemInfo.getHardware().getProcessor();
-        int cpuCore = processor.getLogicalProcessorCount();
+    public CPUCoreScheduler(@Autowired OSBasicInfo osBasicInfo) {
+        this.osBasicInfo = osBasicInfo;
+        int cpuCore = osBasicInfo.getCpuCore();
         log.info("cpu逻辑核心数" + cpuCore);
 
         cpuPool = new LinkedBlockingQueue<>();
@@ -59,7 +60,7 @@ public class CPUCoreScheduler {
             list.add(0, environmentConfig.getShell());
             list.add(0, String.valueOf(coreNumber));
             list.add(0, "-c");
-            list.add(0, "taskset");
+            list.add(0, "taskset");  // taskset -c ${core_number} bash -c ${cmd}
             stringList = new ProcessWorker(processBuilder).job();
         }finally {
             try {
