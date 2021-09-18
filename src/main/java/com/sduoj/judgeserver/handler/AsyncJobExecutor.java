@@ -6,7 +6,6 @@ import com.sduoj.judgeserver.exception.ServerBusyException;
 import com.sduoj.judgeserver.exception.external.ExternalException;
 import com.sduoj.judgeserver.exception.internal.InternalException;
 import com.sduoj.judgeserver.judge.MultiJudgeCodeTask;
-import com.sduoj.judgeserver.judge.SimpleJudgeCodeTask;
 import com.sduoj.judgeserver.rpc.RpcRequest;
 import com.sduoj.judgeserver.rpc.RpcResponse;
 import com.sduoj.judgeserver.rpc.RpcStatus;
@@ -14,7 +13,6 @@ import com.sduoj.judgeserver.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Lookup;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +34,7 @@ public class AsyncJobExecutor {
 
     @Resource
     // 调用消息队列服务
-    MessageQueueService messageQueueService;
+    MessageQueueSender messageQueueSender;
 
     @Async
     void doJob(RpcRequest rpcRequest) throws ServerBusyException {
@@ -77,7 +75,7 @@ public class AsyncJobExecutor {
                 break;
         }
         rpcResponse.setResponseBody(responseBody);
-        messageQueueService.replyRpcResponse(rpcResponse);
+        messageQueueSender.replyRpcResponse(rpcResponse);
     }
 
     @Lookup
