@@ -1,7 +1,6 @@
 package com.sduoj.judgeserver.aspect;
 
 import com.sduoj.judgeserver.conf.EnvironmentConfig;
-import com.sduoj.judgeserver.dto.JudgeRequest;
 import com.sduoj.judgeserver.dto.MultiJudgeRequest;
 import com.sduoj.judgeserver.exception.internal.SftpException;
 import com.sduoj.judgeserver.judge.PublicVariables;

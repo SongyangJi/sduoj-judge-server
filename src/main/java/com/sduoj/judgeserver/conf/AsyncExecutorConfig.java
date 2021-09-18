@@ -58,10 +58,10 @@ public class AsyncExecutorConfig implements AsyncConfigurer {
     public Executor getAsyncExecutor() {
         log.info("初始化线程池");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(corePoolSize>0?corePoolSize:osBasicInfo.getCpuCore());
-        executor.setMaxPoolSize(maxPoolSize>0?maxPoolSize:osBasicInfo.getCpuCore());
-        executor.setQueueCapacity(queueCapacity>0?queueCapacity:DEFAULT_QUEUE_CAPACITY);
-        executor.setKeepAliveSeconds(keepAliveSeconds>=0?keepAliveSeconds:DEFAULT_ALIVE_SECONDS);
+        executor.setCorePoolSize(corePoolSize > 0 ? corePoolSize : osBasicInfo.getCpuCore());
+        executor.setMaxPoolSize(maxPoolSize > 0 ? maxPoolSize : osBasicInfo.getCpuCore());
+        executor.setQueueCapacity(queueCapacity > 0 ? queueCapacity : DEFAULT_QUEUE_CAPACITY);
+        executor.setKeepAliveSeconds(keepAliveSeconds >= 0 ? keepAliveSeconds : DEFAULT_ALIVE_SECONDS);
         executor.setAllowCoreThreadTimeOut(true); // 核心线程也会die
         // 设置线程池的拒绝策略
         executor.setRejectedExecutionHandler(
