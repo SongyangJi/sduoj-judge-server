@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -55,16 +56,17 @@ public class CPUCoreScheduler {
                 log.error("当前线程在等待可用CPU核心时被中断" + e.getMessage(), e);
                 throw new ProcessException("进程未能分配到cpu核心，执行失败");
             }
-            List<String> list = processBuilder.command();
-            list.add(0, "-c");
-            list.add(0, environmentConfig.getShell());
-            list.add(0, String.valueOf(coreNumber));
-            list.add(0, "-c");
-            list.add(0, "taskset");  // taskset -c ${core_number} bash -c ${cmd}
+            // The returned list is not a copy. Subsequent updates to the list will be reflected in the state of this process builder.
+            List<String> cmd = processBuilder.command();
+            // taskset -c ${core_number} bash -c ${cmd}
+            List<String> cmdPrefix = Arrays.asList("taskset", "-c", String.valueOf(coreNumber), environmentConfig.getShell(), "-c");
+            for (int i = cmdPrefix.size() - 1; i >= 0; i--) {
+                cmd.add(0,cmdPrefix.get(i));
+            }
             stringList = new ProcessWorker(processBuilder).job();
-        }finally {
+        } finally {
             try {
-                if(coreNumber != -1){
+                if (coreNumber != -1) {
                     cpuPool.put(coreNumber);
                 }
             } catch (InterruptedException e) {
