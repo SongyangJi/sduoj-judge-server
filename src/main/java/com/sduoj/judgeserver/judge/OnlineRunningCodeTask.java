@@ -110,7 +110,7 @@ public class OnlineRunningCodeTask extends AbstractRunningCodeTask {
             try {
                 // 存储用户的传来的输入到文本文件
                 inputPath = uniquePath.resolve(Paths.get("input.txt"));
-                Files.writeString(inputPath, immediateJudge.getInput(), StandardOpenOption.CREATE_NEW);
+                Files.writeString(inputPath, immediateJudge.getInput() == null ? "" : immediateJudge.getInput(), StandardOpenOption.CREATE_NEW);
             } catch (IOException e) {
                 log.error("在线IDE-存储用户输入-异常" + e.getMessage(), e);
                 throw new InternalException(e.getMessage());

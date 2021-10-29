@@ -32,9 +32,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j(topic = "JudgeCode")
 public abstract class AbstractJudgeCodeTask extends AbstractRunningCodeTask{
 
-    EnvironmentConfig environmentConfig;
-    FileUtil fileUtil;
-
     public AbstractJudgeCodeTask(EnvironmentConfig environmentConfig, FileUtil fileUtil) {
         super(environmentConfig, fileUtil);
     }
