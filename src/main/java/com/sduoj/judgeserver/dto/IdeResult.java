@@ -8,7 +8,6 @@ import lombok.*;
  * @since: 2021/10/29
  */
 
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,6 +17,15 @@ public class IdeResult extends RunningCodeInfo {
     public IdeResult(RunningDetails runningDetails, String detailOfError, String stdOut) {
         super(runningDetails, detailOfError);
         this.stdOut = stdOut;
+    }
+
+    @Override
+    public String toString() {
+        return "IdeResult{" +
+                "stdOut='" + stdOut + '\'' +
+                ", runningDetails=" + runningDetails +
+                ", detailOfError='" + detailOfError + '\'' +
+                '}';
     }
 }
 

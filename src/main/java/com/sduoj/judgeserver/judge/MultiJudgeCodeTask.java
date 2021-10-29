@@ -149,7 +149,7 @@ public class MultiJudgeCodeTask extends AbstractJudgeCodeTask {
 
         } finally {
             // 最终一定会清理垃圾，否则会卡满磁盘
-//             cleanTheRubbish();
+             cleanTheRubbish();
         }
         return multiJudgeResponse;
     }

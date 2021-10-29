@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 public class MessageQueueSender {
 
     @Resource
-    RabbitMQConfig.NormalJudge normalJudge;
+    RabbitMQConfig rabbitMQConfig;
 
     @Resource
     RabbitTemplate rabbitTemplate;
@@ -25,7 +25,7 @@ public class MessageQueueSender {
     public void replyRpcResponse(RpcResponse rpcResponse) {
         log.info("发送RPC响应体" + rpcResponse);
         String response = JsonUtil.stringfy(rpcResponse);
-        rabbitTemplate.convertAndSend(normalJudge.getResponseQueue(), response);
+        rabbitTemplate.convertAndSend(rabbitMQConfig.getResponseQueue(), response);
         log.info("发送RPC响应体成功");
     }
 }

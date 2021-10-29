@@ -48,11 +48,13 @@ public class MessageQueueReceiver {
 
     @RabbitListener(queues = {"${rabbitmq.online-ide.solve-queue}"}, containerFactory = "onlineIdeListenerContainer")
     public String receiveOnlineIdeRequest(String immediateMessageStr) {
+        log.info("收到即时运行代码请求 : "+immediateMessageStr);
         ImmediateJudge immediateJudge = JsonUtil.parse(immediateMessageStr, ImmediateJudge.class);
         OnlineRunningCodeTask onlineRunningCodeTask = onlineRunningCodeTask();
         onlineRunningCodeTask.setImmediateJudge(immediateJudge);
         try {
             IdeResult ideResult = onlineRunningCodeTask.runCode();
+            log.info("返回结果 : {}",ideResult);
             return JsonUtil.stringfy(ideResult);
         } catch (InternalException | ExternalException e) {
             return null;
