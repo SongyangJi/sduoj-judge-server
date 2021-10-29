@@ -1,9 +1,9 @@
 package com.sduoj.judgeserver.aspect;
 
 import com.sduoj.judgeserver.conf.EnvironmentConfig;
-import com.sduoj.judgeserver.dto.JudgeRequest;
 import com.sduoj.judgeserver.dto.MultiJudgeRequest;
 import com.sduoj.judgeserver.exception.internal.SftpException;
+import com.sduoj.judgeserver.judge.PublicVariables;
 import com.sduoj.judgeserver.util.FileUtil;
 import com.sduoj.judgeserver.util.sftp.SftpFilesService;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +67,10 @@ public class PrepareJudgeCodeTaskAspect {
         }
 
         // 删除本地的垃圾测试点文件
-        Files.list(problemDirPath).filter(toDelete -> !testPointIds.contains(toDelete.getFileName().toString())).
+        Files.list(problemDirPath).filter(toDelete ->
+                !testPointIds.contains(toDelete.getFileName().toString())
+                        && !toDelete.getFileName().toString().equals(PublicVariables.DOC_DIRECTOR) // DOC不要删去
+        ).
                 forEach(path -> fileUtil.removeFileOrDirectory(path));
 
         return testPointIds.stream().filter(toDownLoad -> !Files.exists(problemDirPath.resolve(toDownLoad))).collect(Collectors.toList());

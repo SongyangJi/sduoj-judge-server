@@ -8,6 +8,7 @@ import com.sduoj.judgeserver.exception.internal.ParametersMissingException;
 import com.sduoj.judgeserver.exception.external.SandBoxArgumentsException;
 import com.sduoj.judgeserver.exception.internal.ProcessException;
 import com.sduoj.judgeserver.exception.internal.SandBoxRunError;
+import lombok.val;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -38,12 +39,14 @@ public class RunJavaTask extends RunCode {
     private String generateCompileCommand() throws SandBoxArgumentsException, ParametersMissingException {
         SandBoxArguments sandBoxArguments = new SandBoxArguments();
         Map<String, Object> map = new HashMap<>();
-        // java Main.java
+        // javac Main.java
         map.put(SandBoxArguments.EXE_PATH, getRunCodeConfig().getCompilePath());
         List<String> argsList = new ArrayList<>();
+        argsList.add("-encoding"); // 指定 javac 的字符集， 如 javac -encoding UTF-8 Main.java
+        argsList.add("UTF-8");
         argsList.add(super.getRunCodeConfig().getCodeTextPath().toString());
-        map.put(SandBoxArguments.EXE_ARGS, argsList);
 
+        map.put(SandBoxArguments.EXE_ARGS, argsList);
         map.put(SandBoxArguments.OUTPUT_PATH, PublicVariables.OUTPUT_NAME);
 
         sandBoxArguments.setArguments(map);

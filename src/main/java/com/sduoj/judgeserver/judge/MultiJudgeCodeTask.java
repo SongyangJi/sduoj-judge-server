@@ -70,7 +70,7 @@ public class MultiJudgeCodeTask extends AbstractJudgeCodeTask {
         try {
             // 预处理工作
             try {
-                preTreatment();
+                this.preTreatment();
             } catch (ProcessException | IOException e) {
                 log.error("评测任务节点-预处理工作-异常" + e.getMessage(), e);
                 throw new InternalException(e.getMessage());
@@ -149,7 +149,7 @@ public class MultiJudgeCodeTask extends AbstractJudgeCodeTask {
 
         } finally {
             // 最终一定会清理垃圾，否则会卡满磁盘
-            cleanTheRubbish();
+             cleanTheRubbish();
         }
         return multiJudgeResponse;
     }

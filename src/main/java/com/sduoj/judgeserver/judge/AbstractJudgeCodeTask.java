@@ -10,6 +10,7 @@ import com.sduoj.judgeserver.exception.internal.ProcessException;
 import com.sduoj.judgeserver.util.FileUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Song yang Ji
@@ -69,13 +71,19 @@ public abstract class AbstractJudgeCodeTask {
 
         // 获取题目路径、输入路径
         // 题目文件夹路径(绝对)
+
+
         problemDirPath = Paths.get(environmentConfig.getHome()).resolve(judgeRequest.getProblemID());
 //        inputPath = problemDirPath.resolve(Paths.get(PublicVariables.INPUT_TXT));
-        String uniqueID = judgeRequest.getRequestID();
+        Path doc = problemDirPath.resolve(docDirPath);
+
+        if (!Files.exists(doc)) {
+            Files.createDirectory(doc);
+        }
         // 独属于一个请求用户的路径
-        uniquePath = problemDirPath.resolve(docDirPath).resolve(Paths.get(uniqueID));
-        // 创建文件夹（上层的 doc目录如果没有的话，也会跟着创建）
-        Files.createDirectories(uniquePath);
+        String uniqueID = judgeRequest.getRequestID();
+        uniquePath = doc.resolve(Paths.get(uniqueID));
+        Files.createDirectory(uniquePath);
         // 必须赋予权限，否则沙箱运行异常
         fileUtil.openPermissions(uniquePath);
     }
