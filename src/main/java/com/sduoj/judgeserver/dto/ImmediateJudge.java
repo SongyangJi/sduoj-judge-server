@@ -20,18 +20,19 @@ public class ImmediateJudge implements JudgeNecessaryInfo {
 }
 
 /*
- {
- "input": "fake_data",
- "code": {
- "language": "PYTHON3",
- "codeText": "fake_data"
- },
- "judgeLimit": {
- "maxCPUTime": 34,
- "maxRealTime": 81,
- "maxMemory": 0,
- "maxStack": 82,
- "maxProcessNumber": 94,
- "maxOutputSize": 67
- }
+{
+  "input": "fake_data",
+  "code": {
+    "language": "PYTHON3",
+    "codeText": "fake_data"
+  },
+  "judgeLimit": {
+    "maxCPUTime": 74,
+    "maxRealTime": 23,
+    "maxMemory": 46,
+    "maxStack": 21,
+    "maxProcessNumber": 59,
+    "maxOutputSize": 1
+  }
+}
 }*/
