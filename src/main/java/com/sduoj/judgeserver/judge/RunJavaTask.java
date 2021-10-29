@@ -120,7 +120,6 @@ public class RunJavaTask extends RunCode {
     @Override
     public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError, IOException {
         if (!compile()) {
-            RunCodeResult runCodeResult = new RunCodeResult();
             // 编译错误
             judgeResponse.setJudgeResult(JudgeResult.COMPILE_ERROR);
             runCodeResult.setSandBoxResult(sandBoxResult);

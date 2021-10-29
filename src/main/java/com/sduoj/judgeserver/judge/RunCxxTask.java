@@ -110,7 +110,6 @@ public class RunCxxTask extends RunCode {
         // 先编译再运行
         if (!compile()) {
             // 编译错误
-            RunCodeResult runCodeResult = new RunCodeResult();
             judgeResponse.setJudgeResult(JudgeResult.COMPILE_ERROR);
             runCodeResult.setSandBoxResult(sandBoxResult);
             return runCodeResult;

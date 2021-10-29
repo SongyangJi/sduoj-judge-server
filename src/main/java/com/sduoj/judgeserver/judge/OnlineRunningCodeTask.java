@@ -137,12 +137,18 @@ public class OnlineRunningCodeTask extends AbstractRunningCodeTask {
             String stdOut = "";
             String stdError = "";
             try {
-                stdOut = Files.readString(runCodeResult.getOutputPath());
-                stdError = Files.readString(runCodeResult.getErrorPath());
+                Path outputPath = runCodeResult.getOutputPath();
+                Path errorPath = runCodeResult.getErrorPath();
+                if (outputPath != null && Files.exists(outputPath)) {
+                    stdOut = Files.readString(outputPath);
+                }
+                if (errorPath != null && Files.exists(errorPath)) {
+                    stdError = Files.readString(errorPath);
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return new IdeResult(judgeResponse.getRunningDetails(), stdError, stdOut);
         } finally {
             // 清理垃圾

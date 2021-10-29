@@ -19,6 +19,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,6 +58,9 @@ public abstract class RunCode {
     @Setter
     @Getter
     protected SandBoxResult sandBoxResult;
+
+    // 包含了输出文件路径
+    protected RunCodeResult runCodeResult;
 
     // 运行代码的必要的配置信息
     @Setter
@@ -109,11 +113,6 @@ public abstract class RunCode {
             fileUtil.removeFileForce(oldOutFilePath);
         }
 
-        RunCodeResult runCodeResult = new RunCodeResult();
-        // 标准输出的文件路径
-        runCodeResult.setOutputPath(getAbsoluteOutputPath());
-        // 标准错误的文件路径
-        runCodeResult.setErrorPath(getAbsoluteErrorPath());
 
 
 //        把对other写权限关闭
@@ -208,6 +207,17 @@ public abstract class RunCode {
      */
     protected Path getAbsoluteErrorPath() {
         return runCodeConfig.getUniquePath().resolve(relativeErrorPath);
+    }
+
+
+    @PostConstruct
+    public void init() {
+        log.info("......初始化");
+        runCodeResult = new RunCodeResult();
+        // 标准输出的文件路径
+        runCodeResult.setOutputPath(getAbsoluteOutputPath());
+        // 标准错误的文件路径
+        runCodeResult.setErrorPath(getAbsoluteErrorPath());
     }
 
 }
