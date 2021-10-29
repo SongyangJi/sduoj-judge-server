@@ -1,5 +1,13 @@
-thread-pool:
-  core-pool-size: 4
-  max-pool-size: 4
-  queue-capacity: 100
-  keep-alive-seconds: 300
+normal-judge:
+  thread-pool:
+    core-pool-size: 4
+    max-pool-size: 4
+    queue-capacity: 100
+    keep-alive-seconds: 300
+
+online-ide:
+  thread-pool:
+    core-pool-size: 4
+    max-pool-size: 8
+    queue-capacity: 32
+    keep-alive-seconds: 120
