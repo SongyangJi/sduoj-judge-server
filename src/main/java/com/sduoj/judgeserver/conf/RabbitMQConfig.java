@@ -47,12 +47,12 @@ public class RabbitMQConfig {
         int totalPrefetch = 100;
 
         @Bean
-        public Queue createRequestQueue() {
+        public Queue requestQueue() {
             return new Queue(requestQueue, true);
         }
 
         @Bean
-        public Queue createResponseQueue() {
+        public Queue responseQueue() {
             return new Queue(responseQueue, true);
         }
 
@@ -80,6 +80,12 @@ public class RabbitMQConfig {
         }
 
         String solveQueue;
+
+        @Bean
+        public Queue solveQueue() {
+            return new Queue(solveQueue, true);
+        }
+
 
         @Bean("onlineIdeListenerContainer")
         public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
