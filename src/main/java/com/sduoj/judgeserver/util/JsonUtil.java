@@ -21,14 +21,22 @@ public final class JsonUtil {
     /**
      * Serialize any Java value as a String.
      */
-    public static String stringfy(Object object) throws JsonProcessingException {
-        return mapper.writeValueAsString(object);
+    public static String stringfy(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JsonUtil stringfy error: " + e.getMessage());
+        }
     }
 
     /**
      * Deserialize JSON content from given JSON content String.
      */
-    public static <T> T parse(String content, Class<T> valueType) throws IOException {
-        return mapper.readValue(content, valueType);
+    public static <T> T parse(String content, Class<T> valueType) {
+        try {
+            return mapper.readValue(content, valueType);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JsonUtil parse error: " + e.getMessage());
+        }
     }
 }
