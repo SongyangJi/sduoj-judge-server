@@ -26,8 +26,11 @@ public class PublicVariables {
     // 属于某一道题目的输入文件 (如果没有Special Judge的话，那么输入文件只有一份)
     public static final String STANDARD_INPUT_TXT = "standard_input.txt";
 
-    // 代码编译、运行的输出文件
+    // 代码编译、运行的结果的标准输出文件名
     public static final String OUTPUT_NAME = "output.txt";
+
+    // 代码编译、运行的结果的标准错误的文件名
+    public static final String ERROR_NAME = "error.txt";
 
     // c、cpp编译后的可执行文件
     public static final String OUT_EXEC_FILE_NAME = "out";

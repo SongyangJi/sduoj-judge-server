@@ -119,7 +119,11 @@ public class RunJavaTask extends RunCode {
     @Override
     public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
         RunCodeResult runCodeResult = new RunCodeResult();
+        // 标准输出的文件路径
         runCodeResult.setOutputPath(getAbsoluteOutputPath());
+        // 标准错误的文件路径
+        runCodeResult.setErrorPath(getAbsoluteErrorPath());
+
         if (!compile()) {
             // 编译错误
             judgeResponse.setJudgeResult(JudgeResult.COMPILE_ERROR);

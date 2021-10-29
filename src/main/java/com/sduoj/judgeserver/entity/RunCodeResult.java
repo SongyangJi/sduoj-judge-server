@@ -14,6 +14,9 @@ import java.nio.file.Path;
 public class RunCodeResult {
     // 绝对路径
     private Path outputPath;
+
+    private Path errorPath;
+
     // 沙箱结果
     SandBoxResult sandBoxResult;
 }

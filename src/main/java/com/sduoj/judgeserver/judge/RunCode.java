@@ -38,9 +38,15 @@ import java.util.List;
 public abstract class RunCode {
 
 
-    // 输出路径(相对)
+    // 标准输出路径(相对)
     @Getter
     static final Path relativeOutputPath = Paths.get(PublicVariables.OUTPUT_NAME);
+
+    // 标准输出路径(相对)
+    @Getter
+    static final Path relativeErrorPath = Paths.get(PublicVariables.ERROR_NAME);
+
+
 
     // 评测回复
     @Setter
@@ -186,10 +192,17 @@ public abstract class RunCode {
 
 
     /**
-     * @return 用户代码的绝对的输出路径
+     * @return 用户代码的标准输出的绝对路径
      */
     protected Path getAbsoluteOutputPath() {
         return runCodeConfig.getUniquePath().resolve(relativeOutputPath);
+    }
+
+    /**
+     * @return 用户代码的标准错误的绝对路径
+     */
+    protected Path getAbsoluteErrorPath() {
+        return runCodeConfig.getUniquePath().resolve(relativeErrorPath);
     }
 
 }
