@@ -67,7 +67,7 @@ public class CPUCoreScheduler {
         } finally {
             try {
                 if (coreNumber != -1) {
-                    cpuPool.put(coreNumber);
+                    cpuPool.put(coreNumber); // 永不阻塞，因为是无界的
                 }
             } catch (InterruptedException e) {
                 log.error("当前线程在等待以把CPU核心返还给CPU Pool时被中断" + e.getMessage(), e);
