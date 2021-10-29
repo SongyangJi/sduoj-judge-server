@@ -21,7 +21,7 @@
     <description>Judge server for online judge of sdu</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
     </properties>
 
     <dependencies>

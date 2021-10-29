@@ -77,7 +77,7 @@ public class RunJavaTask extends RunCode {
         SandBoxArguments sandBoxArguments = new SandBoxArguments();
 
 
-        var argsMap = runCodeConfig.getJudgeLimit().getLimitArgsMap();
+        Map<String,Object> argsMap = runCodeConfig.getJudgeLimit().getLimitArgsMap();
 
         // 注意评测java的时候，不可以有内存限制。
         if (argsMap.get(SandBoxArguments.MAX_MEMORY) != null) {
