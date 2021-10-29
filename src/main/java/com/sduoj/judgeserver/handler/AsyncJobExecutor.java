@@ -65,9 +65,6 @@ public class AsyncJobExecutor {
                 } catch (ExternalException e) {
                     responseBody = new RpcResponse.ResponseBody(RpcStatus.ClientError, e.getMessage());
                     log.error("评测任务失败,爆发外部异常 {}", e.getMessage());
-                } catch (IOException e) {
-                    responseBody = new RpcResponse.ResponseBody(RpcStatus.ClientError, e.getMessage());
-                    log.error("解析请求体异常 {}", e.getMessage());
                 }
                 break;
             // 分发题目任务

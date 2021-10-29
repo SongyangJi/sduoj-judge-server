@@ -24,7 +24,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JudgeRequest {
+public class JudgeRequest implements JudgeNecessaryInfo {
     @NonNull
     String requestID;
     @NonNull

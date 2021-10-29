@@ -1,12 +1,19 @@
 package com.sduoj.judgeserver.conf;
 
 
+import com.sduoj.judgeserver.util.os.OSBasicInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -14,27 +21,74 @@ import org.springframework.context.annotation.Configuration;
  * @ProjectName: sduoj-judge-server
  * @Version 1.0
  * @Description: 消息队列配置类
- *
  */
 
 
 @Getter
-@Setter
 @Configuration
-@ConfigurationProperties(value = "rabbitmq.message-queue")
+@ConfigurationProperties(value = "rabbitmq")
 public class RabbitMQConfig {
 
-    String requestQueue;
-    String responseQueue;
+    @Getter
+    @Configuration
+    public static class NormalJudge {
 
-    @Bean
-    public Queue createRequestQueue() {
-        return new Queue(requestQueue,true);
+        OSBasicInfo osBasicInfo;
+
+        @Autowired
+        public NormalJudge(OSBasicInfo osBasicInfo) {
+            this.osBasicInfo = osBasicInfo;
+        }
+
+        String requestQueue;
+
+        String responseQueue;
+
+        int totalPrefetch = 100;
+
+        @Bean
+        public Queue createRequestQueue() {
+            return new Queue(requestQueue, true);
+        }
+
+        @Bean
+        public Queue createResponseQueue() {
+            return new Queue(responseQueue, true);
+        }
+
+
+        @Bean("normalJudgeListenerContainer")
+        public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+            SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+            factory.setConnectionFactory(connectionFactory);
+            factory.setConcurrentConsumers(osBasicInfo.getCpuCore());
+            factory.setMaxConcurrentConsumers(osBasicInfo.getCpuCore());
+            factory.setPrefetchCount(totalPrefetch / osBasicInfo.getCpuCore());
+            return factory;
+        }
     }
 
-    @Bean
-    public Queue createResponseQueue() {
-        return new Queue(responseQueue,true);
+    @Configuration
+    @Getter
+    public static class OnlineIde {
+
+        OnlineIdeExecutorConfig onlineIdeExecutorConfig;
+
+        @Autowired
+        public OnlineIde(OnlineIdeExecutorConfig onlineIdeExecutorConfig) {
+            this.onlineIdeExecutorConfig = onlineIdeExecutorConfig;
+        }
+
+        String solveQueue;
+
+        @Bean("onlineIdeListenerContainer")
+        public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+            SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+            factory.setConnectionFactory(connectionFactory);
+            factory.setConcurrentConsumers(onlineIdeExecutorConfig.getCorePoolSize());
+            factory.setMaxConcurrentConsumers(onlineIdeExecutorConfig.getMaxPoolSize());
+            return factory;
+        }
     }
 
 }

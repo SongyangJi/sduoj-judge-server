@@ -12,13 +12,12 @@ import lombok.*;
 @ToString
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class JudgeResponse {
+public class JudgeResponse extends RunningCodeInfo {
     JudgeResult judgeResult;
 
-    RunningDetails runningDetails;
-
-    String detailOfError;
-
+    public JudgeResponse(JudgeResult judgeResult, RunningDetails runningDetails, String detailOfError) {
+        super(runningDetails, detailOfError);
+        this.judgeResult = judgeResult;
+    }
 }

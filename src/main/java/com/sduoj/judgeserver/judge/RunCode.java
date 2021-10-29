@@ -79,12 +79,7 @@ public abstract class RunCode {
 //        用于测试的静态沙箱结果
 //        String result = "{\"cpu_time\":61,\"real_time\":83,\"memory\":27164672,\"signal\":0,\"exit_code\":0,\"error\":0,\"result\":0}";
 
-        try {
-            sandBoxResult = JsonUtil.parse(result, SandBoxResult.class);
-        } catch (IOException e) {
-            log.error("沙箱结果 " + result + " 解析为Json对象时错误" + e.getMessage(), e);
-            throw new SandBoxRunError("沙箱结果解析为Json对象时错误");
-        }
+        sandBoxResult = JsonUtil.parse(result, SandBoxResult.class);
 
         // 判断是否编译失败
         if (sandBoxResult.getResult() != SandBoxResult.RESULT.SUCCESS.ordinal()) {
@@ -129,12 +124,7 @@ public abstract class RunCode {
 //        用于测试的静态沙箱结果
 //        String result = "{\"cpu_time\":61,\"real_time\":83,\"memory\":27164672,\"signal\":0,\"exit_code\":0,\"error\":0,\"result\":0}";
 
-        try {
-            sandBoxResult = JsonUtil.parse(result, SandBoxResult.class);
-        } catch (IOException e) {
-            log.error("沙箱结果 " + result + " 解析为Json对象时错误" + e.getMessage(), e);
-            throw new SandBoxRunError("沙箱结果解析为Json对象时错误");
-        }
+        sandBoxResult = JsonUtil.parse(result, SandBoxResult.class);
 
 
         // 经测试，在并发场景下，(end - start) 可能小于 0,此时沙箱工作异常

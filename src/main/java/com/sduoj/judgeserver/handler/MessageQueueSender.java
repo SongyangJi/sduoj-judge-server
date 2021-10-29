@@ -7,6 +7,7 @@ import com.sduoj.judgeserver.rpc.RpcResponse;
 import com.sduoj.judgeserver.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,19 +17,15 @@ import javax.annotation.Resource;
 public class MessageQueueSender {
 
     @Resource
-    RabbitMQConfig rabbitMQConfig;
+    RabbitMQConfig.NormalJudge normalJudge;
 
     @Resource
     RabbitTemplate rabbitTemplate;
 
     public void replyRpcResponse(RpcResponse rpcResponse) {
         log.info("发送RPC响应体" + rpcResponse);
-        try {
-            String response = JsonUtil.stringfy(rpcResponse);
-            rabbitTemplate.convertAndSend(rabbitMQConfig.getResponseQueue(), response);
-            log.info("发送RPC响应体成功");
-        } catch (JsonProcessingException e) {
-            log.error("json字符串解析错误:\n" + rpcResponse + "\n" + e.getMessage());
-        }
+        String response = JsonUtil.stringfy(rpcResponse);
+        rabbitTemplate.convertAndSend(normalJudge.getResponseQueue(), response);
+        log.info("发送RPC响应体成功");
     }
 }

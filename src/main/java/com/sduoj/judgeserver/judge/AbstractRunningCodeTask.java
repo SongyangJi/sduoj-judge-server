@@ -1,87 +1,46 @@
 package com.sduoj.judgeserver.judge;
 
 import com.sduoj.judgeserver.conf.EnvironmentConfig;
-import com.sduoj.judgeserver.dto.*;
+import com.sduoj.judgeserver.dto.JudgeNecessaryInfo;
+import com.sduoj.judgeserver.dto.JudgeResponse;
 import com.sduoj.judgeserver.entity.RunCodeConfig;
-import com.sduoj.judgeserver.entity.RunCodeResult;
-import com.sduoj.judgeserver.exception.external.ExternalException;
-import com.sduoj.judgeserver.exception.internal.InternalException;
 import com.sduoj.judgeserver.exception.internal.ProcessException;
 import com.sduoj.judgeserver.util.FileUtil;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.concurrent.TimeUnit;
 
 /**
- * @Author: Song yang Ji
- * @ProjectName: sduoj-judge-server
- * @Version 1.0
- * @Description:
+ * @author: SongyangJi
+ * @description:
+ * @since: 2021/10/29
  */
 
-@Slf4j(topic = "JudgeCode")
-public abstract class AbstractJudgeCodeTask {
-
+@Slf4j(topic = "RunningCode")
+public abstract class AbstractRunningCodeTask {
     EnvironmentConfig environmentConfig;
     FileUtil fileUtil;
 
-    public AbstractJudgeCodeTask(EnvironmentConfig environmentConfig, FileUtil fileUtil) {
+    public AbstractRunningCodeTask(EnvironmentConfig environmentConfig, FileUtil fileUtil) {
         this.environmentConfig = environmentConfig;
         this.fileUtil = fileUtil;
     }
 
-    // 客户端传来的请求
-    @NonNull
-    JudgeRequest judgeRequest;
-
-
-    // 题目文件夹路径(绝对)
-    protected Path problemDirPath;
     // 属于每个请求人的独一无二的文件夹路径(绝对)
     protected Path uniquePath;
 
-    // 题目下的doc目录(相对)
-    private static final Path docDirPath;
-
-    static {
-        docDirPath = Paths.get(PublicVariables.DOC_DIRECTOR);
-    }
+    protected JudgeNecessaryInfo judgeNecessaryInfo;
 
 
     /**
      * 预处理工作: 获得题目路径、创建文件夹、赋予写权限
-     *
-     * @throws ProcessException 调用OSUtil方法爆发的进程异常
-     * @throws IOException      创建文件夹爆发的异常
      */
-    protected void preTreatment() throws ProcessException, IOException {
-
-        // 获取题目路径、输入路径
-        // 题目文件夹路径(绝对)
-
-        problemDirPath = Paths.get(environmentConfig.getHome()).resolve(judgeRequest.getProblemID());
-        Path doc = problemDirPath.resolve(docDirPath);
-
-        if (!Files.exists(doc)) {
-            Files.createDirectory(doc);
-        }
-        // 独属于一个请求用户的路径
-        String uniqueID = judgeRequest.getRequestID();
-        uniquePath = doc.resolve(Paths.get(uniqueID));
-        Files.createDirectory(uniquePath);
-        // 必须赋予权限，否则沙箱运行异常
-        fileUtil.openPermissions(uniquePath);
-    }
+    protected abstract void preTreatment() throws ProcessException, IOException;
 
 
     /**
@@ -90,7 +49,7 @@ public abstract class AbstractJudgeCodeTask {
      * @return 代码文本文件的文件名
      */
     protected String getCodeTextName() {
-        return PublicVariables.CODE_TEXT_NAME + judgeRequest.getCode().getLanguage().getFileSuffix();
+        return PublicVariables.CODE_TEXT_NAME + judgeNecessaryInfo.getCode().getLanguage().getFileSuffix();
     }
 
     /**
@@ -101,7 +60,7 @@ public abstract class AbstractJudgeCodeTask {
     protected void storeCodeText() throws IOException {
         String codeTextFileName = getCodeTextName();
         Path path = uniquePath.resolve(Paths.get(codeTextFileName));
-        Files.writeString(path, judgeRequest.getCode().getCodeText(), StandardOpenOption.CREATE_NEW);
+        Files.writeString(path, judgeNecessaryInfo.getCode().getCodeText(), StandardOpenOption.CREATE_NEW);
     }
 
 
@@ -110,7 +69,7 @@ public abstract class AbstractJudgeCodeTask {
         RunCode runCode = null;
         RunCodeConfig runCodeConfig = new RunCodeConfig();
         // 根据传递来的代码的语言版本，生成合适的RunCode实例
-        switch (judgeRequest.getCode().getLanguage()) {
+        switch (judgeNecessaryInfo.getCode().getLanguage()) {
             case PYTHON2:
                 runCode = getRunPythonTask();
                 runCodeConfig.setExecutePath(environmentConfig.getPython().getPython2());
@@ -148,7 +107,7 @@ public abstract class AbstractJudgeCodeTask {
         // 代码文件名
         runCodeConfig.setCodeTextPath(Paths.get(getCodeTextName()));
         // 运行的代码的限制
-        runCodeConfig.setJudgeLimit(judgeRequest.getJudgeLimit());
+        runCodeConfig.setJudgeLimit(judgeNecessaryInfo.getJudgeLimit());
 
         //
         runCode.setRunCodeConfig(runCodeConfig);
@@ -157,38 +116,6 @@ public abstract class AbstractJudgeCodeTask {
         return runCode;
     }
 
-
-    protected boolean compareWithStandardAnswer(Path standardAnswerPath, Path outputPath) throws IOException {
-        log.debug("与标准答案比对");
-        if (!Files.exists(outputPath)) {
-            return false;
-        }
-        // 之后要改为惰性流式处理, 否则文件太大会OOM。
-        String answer = Files.readString(standardAnswerPath);
-        String output = Files.readString(outputPath);
-        return answer.equals(output);
-    }
-
-    /**
-     * 用户的输出和标准答案作比对
-     *
-     * @param runCodeResult 运行代码的结果
-     * @throws IOException 文件读取的爆发的异常
-     */
-    protected void compareWithStandardAnswer(JudgeResponse judgeResponse, Path standardAnswerPath, RunCodeResult runCodeResult) throws IOException {
-        // 对标(只有在尚未发生任何错误时,才进行到这一步，如果编译错误，或者运行错误，直接跳过)
-        if (judgeResponse.getJudgeResult() == null) {
-            if (compareWithStandardAnswer(standardAnswerPath, runCodeResult.getOutputPath())) {
-                judgeResponse.setJudgeResult(JudgeResult.ACCEPT);
-                // 获取CPU运行时间、耗用CPU内存
-                judgeResponse.setRunningDetails(runCodeResult.getSandBoxResult().generateRunningDetails());
-                // 如果没有AC就不返回沙箱的信息了
-            } else {
-                // 目前没有处理格式错误问题,只要和标准答案不匹配，就返回WA
-                judgeResponse.setJudgeResult(JudgeResult.WRONG_ANSWER);
-            }
-        }
-    }
 
     /**
      * 清理文件垃圾
@@ -225,12 +152,5 @@ public abstract class AbstractJudgeCodeTask {
     protected RunPythonTask getRunPythonTask() {
         return null;
     }
-
-    @Override
-    public String toString() {
-        return "执行判题的异步任务";
-    }
-
-    public abstract JudgeResponse judgeCode() throws InternalException, ExternalException;
 
 }

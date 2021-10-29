@@ -23,6 +23,9 @@ import java.util.Map;
 public class MultiJudgeResponse extends JudgeResponse {
     @NonNull
     String requestID;
+    /**
+     * 测试点--评测结果
+     */
     Map<String, JudgeResponse> pointJudgeResponseMap;
 
     public MultiJudgeResponse(@NonNull String requestID) {

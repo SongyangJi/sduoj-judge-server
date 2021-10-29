@@ -35,7 +35,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 
 @Slf4j
-@ConfigurationProperties(value = "thread-pool")
+@ConfigurationProperties(value = "normal-judge.thread-pool")
 @Configuration
 @EnableAsync
 @Getter
