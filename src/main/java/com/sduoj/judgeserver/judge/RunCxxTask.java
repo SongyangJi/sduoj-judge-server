@@ -107,6 +107,7 @@ public class RunCxxTask extends RunCode {
 
     @Override
     public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError, IOException {
+        super.run();
         // 先编译再运行
         if (!compile()) {
             // 编译错误

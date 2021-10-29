@@ -8,6 +8,8 @@ import com.sduoj.judgeserver.exception.internal.ProcessException;
 import com.sduoj.judgeserver.exception.internal.SandBoxRunError;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +54,8 @@ public class RunPythonTask extends RunCode {
 
 
     @Override
-    public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
+    public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError, IOException {
+        super.run();
         String cmd = generateRunCommand();
         // 调用父类的执行方法
         return runCode(cmd);

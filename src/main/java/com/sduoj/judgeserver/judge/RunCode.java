@@ -48,7 +48,6 @@ public abstract class RunCode {
     static final Path relativeErrorPath = Paths.get(PublicVariables.ERROR_NAME);
 
 
-
     // 评测回复
     @Setter
     @Getter
@@ -114,7 +113,6 @@ public abstract class RunCode {
         }
 
 
-
 //        把对other写权限关闭
         fileUtil.offPermissions(runCodeConfig.getUniquePath());
 
@@ -155,8 +153,14 @@ public abstract class RunCode {
     }
 
 
-    public abstract RunCodeResult run() throws IOException, ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError;
-
+    public RunCodeResult run() throws IOException, ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
+        runCodeResult = new RunCodeResult();
+        // 标准输出的文件路径
+        runCodeResult.setOutputPath(getAbsoluteOutputPath());
+        // 标准错误的文件路径
+        runCodeResult.setErrorPath(getAbsoluteErrorPath());
+        return runCodeResult;
+    }
 
 
     /**
@@ -207,17 +211,6 @@ public abstract class RunCode {
      */
     protected Path getAbsoluteErrorPath() {
         return runCodeConfig.getUniquePath().resolve(relativeErrorPath);
-    }
-
-
-    @PostConstruct
-    public void init() {
-        log.info("......初始化");
-        runCodeResult = new RunCodeResult();
-        // 标准输出的文件路径
-        runCodeResult.setOutputPath(getAbsoluteOutputPath());
-        // 标准错误的文件路径
-        runCodeResult.setErrorPath(getAbsoluteErrorPath());
     }
 
 }
