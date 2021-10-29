@@ -27,7 +27,7 @@ public class MessageQueueReceiver {
     @Resource
     MessageQueueSender messageQueueSender;
 
-    @RabbitListener(queues = {"${rabbitmq.message-queue.request-queue}"}, containerFactory = "normalJudgeListenerContainer")
+    @RabbitListener(queues = {"${rabbitmq.normal-judge.request-queue}"}, containerFactory = "normalJudgeListenerContainer")
     public void receiveRpcRequest(String rpcRequestString) {
         log.info("\n\n\n\n\n");
         log.info("受到RPC请求 {}", rpcRequestString);
@@ -46,7 +46,7 @@ public class MessageQueueReceiver {
         }
     }
 
-    @RabbitListener(queues = {"${rabbitmq.message-queue.request-queue}"}, containerFactory = "onlineIdeListenerContainer")
+    @RabbitListener(queues = {"${rabbitmq.online-ide.solve-queue}"}, containerFactory = "onlineIdeListenerContainer")
     public String receiveOnlineIdeRequest(String immediateMessageStr) {
         ImmediateJudge immediateJudge = JsonUtil.parse(immediateMessageStr, ImmediateJudge.class);
         OnlineRunningCodeTask onlineRunningCodeTask = onlineRunningCodeTask();
