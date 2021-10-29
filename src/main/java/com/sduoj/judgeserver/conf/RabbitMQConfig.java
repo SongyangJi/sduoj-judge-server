@@ -25,11 +25,13 @@ import javax.annotation.Resource;
 
 
 @Getter
+@Setter
 @Configuration
 @ConfigurationProperties(value = "rabbitmq")
 public class RabbitMQConfig {
 
     @Getter
+    @Setter
     @Configuration
     public static class NormalJudge {
 
@@ -70,6 +72,7 @@ public class RabbitMQConfig {
 
     @Configuration
     @Getter
+    @Setter
     public static class OnlineIde {
 
         OnlineIdeExecutorConfig onlineIdeExecutorConfig;

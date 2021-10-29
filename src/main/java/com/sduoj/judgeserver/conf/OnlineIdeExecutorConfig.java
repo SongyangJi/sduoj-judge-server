@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 @ConfigurationProperties(value = "online-ide.thread-pool")
 @Configuration
 @Getter
+@Setter
 public class OnlineIdeExecutorConfig {
 
     private int corePoolSize;
