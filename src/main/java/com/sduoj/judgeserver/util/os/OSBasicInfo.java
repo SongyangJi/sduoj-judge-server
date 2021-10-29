@@ -1,10 +1,10 @@
 package com.sduoj.judgeserver.util.os;
 
 
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Configuration;
 
 
-@Service
+@Configuration
 public class OSBasicInfo {
 
     public int getCpuCore() {

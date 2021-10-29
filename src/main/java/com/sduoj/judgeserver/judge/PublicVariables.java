@@ -17,6 +17,9 @@ public class PublicVariables {
     // 存储用户的代码、运行结果的根目录
     public static final String DOC_DIRECTOR = "doc";
 
+    // 根目录下在线IDE功能的文件目录
+    public static final String IMMEDIATE_DIRECTOR = "immediate";
+
     // 标准答案的文件名
     public static final String STANDARD_ANSWER_TXT = "standard_answer.txt";
 
