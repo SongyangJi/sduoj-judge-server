@@ -8,13 +8,10 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.Resource;
-
 
 /**
  * @Author: Song yang Ji
@@ -24,43 +21,45 @@ import javax.annotation.Resource;
  */
 
 
-@Getter
-@Setter
+
 @Configuration
-@ConfigurationProperties(value = "rabbitmq")
 public class RabbitMQConfig {
 
-    private NormalJudge normalJudge;
-    private OnlineIde onlineIde;
+    @Value("${rabbitmq.normal-judge.request-queue}")
+    String requestQueue;
+    @Value("${rabbitmq.normal-judge.response-queue}")
+    String responseQueue;
+    @Bean
+    public Queue requestQueue() {
+        return new Queue(requestQueue, true);
+    }
+    @Bean
+    public Queue responseQueue() {
+        return new Queue(responseQueue, true);
+    }
+
+    @Value("${rabbitmq.online-ide.solve-queue}")
+    String solveQueue;
+    @Bean
+    public Queue solveQueue() {
+        return new Queue(solveQueue, true);
+    }
+
+
 
     @Getter
     @Setter
     @Configuration
     public static class NormalJudge {
 
+        @Value("${rabbitmq.normal-judge.total-prefetch}")
+        int totalPrefetch = 100;
+
         OSBasicInfo osBasicInfo;
 
-        @Autowired
         public NormalJudge(OSBasicInfo osBasicInfo) {
             this.osBasicInfo = osBasicInfo;
         }
-
-        String requestQueue;
-
-        String responseQueue;
-
-        int totalPrefetch = 100;
-
-        @Bean
-        public Queue requestQueue() {
-            return new Queue(requestQueue, true);
-        }
-
-        @Bean
-        public Queue responseQueue() {
-            return new Queue(responseQueue, true);
-        }
-
 
         @Bean("normalJudgeListenerContainer")
         public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
@@ -75,23 +74,13 @@ public class RabbitMQConfig {
 
     @Getter
     @Setter
-    @Configuration
     public static class OnlineIde {
 
         OnlineIdeExecutorConfig onlineIdeExecutorConfig;
 
-        @Autowired
         public OnlineIde(OnlineIdeExecutorConfig onlineIdeExecutorConfig) {
             this.onlineIdeExecutorConfig = onlineIdeExecutorConfig;
         }
-
-        String solveQueue;
-
-        @Bean
-        public Queue solveQueue() {
-            return new Queue(solveQueue, true);
-        }
-
 
         @Bean("onlineIdeListenerContainer")
         public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory(ConnectionFactory connectionFactory) {

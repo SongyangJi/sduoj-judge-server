@@ -110,7 +110,11 @@ public abstract class RunCode {
         }
 
         RunCodeResult runCodeResult = new RunCodeResult();
+        // 标准输出的文件路径
         runCodeResult.setOutputPath(getAbsoluteOutputPath());
+        // 标准错误的文件路径
+        runCodeResult.setErrorPath(getAbsoluteErrorPath());
+
 
 //        把对other写权限关闭
         fileUtil.offPermissions(runCodeConfig.getUniquePath());
@@ -153,6 +157,7 @@ public abstract class RunCode {
 
 
     public abstract RunCodeResult run() throws IOException, ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError;
+
 
 
     /**

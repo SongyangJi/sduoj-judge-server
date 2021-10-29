@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -105,12 +106,11 @@ public class RunCxxTask extends RunCode {
 
 
     @Override
-    public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
-        RunCodeResult runCodeResult = new RunCodeResult();
-        runCodeResult.setOutputPath(getAbsoluteOutputPath());
+    public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError, IOException {
         // 先编译再运行
         if (!compile()) {
             // 编译错误
+            RunCodeResult runCodeResult = new RunCodeResult();
             judgeResponse.setJudgeResult(JudgeResult.COMPILE_ERROR);
             runCodeResult.setSandBoxResult(sandBoxResult);
             return runCodeResult;

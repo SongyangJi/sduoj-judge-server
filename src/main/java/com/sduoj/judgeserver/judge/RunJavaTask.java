@@ -12,6 +12,7 @@ import lombok.val;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -117,14 +118,9 @@ public class RunJavaTask extends RunCode {
     }
 
     @Override
-    public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError {
-        RunCodeResult runCodeResult = new RunCodeResult();
-        // 标准输出的文件路径
-        runCodeResult.setOutputPath(getAbsoluteOutputPath());
-        // 标准错误的文件路径
-        runCodeResult.setErrorPath(getAbsoluteErrorPath());
-
+    public RunCodeResult run() throws ParametersMissingException, SandBoxArgumentsException, ProcessException, SandBoxRunError, IOException {
         if (!compile()) {
+            RunCodeResult runCodeResult = new RunCodeResult();
             // 编译错误
             judgeResponse.setJudgeResult(JudgeResult.COMPILE_ERROR);
             runCodeResult.setSandBoxResult(sandBoxResult);
