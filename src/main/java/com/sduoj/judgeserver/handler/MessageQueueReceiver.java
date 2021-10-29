@@ -1,13 +1,18 @@
 package com.sduoj.judgeserver.handler;
 
+import com.sduoj.judgeserver.dto.IdeResult;
 import com.sduoj.judgeserver.dto.ImmediateJudge;
 import com.sduoj.judgeserver.exception.ServerBusyException;
+import com.sduoj.judgeserver.exception.external.ExternalException;
+import com.sduoj.judgeserver.exception.internal.InternalException;
+import com.sduoj.judgeserver.judge.OnlineRunningCodeTask;
 import com.sduoj.judgeserver.rpc.RpcRequest;
 import com.sduoj.judgeserver.rpc.RpcResponse;
 import com.sduoj.judgeserver.rpc.RpcStatus;
 import com.sduoj.judgeserver.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,12 +47,21 @@ public class MessageQueueReceiver {
     }
 
     @RabbitListener(queues = {"${rabbitmq.message-queue.request-queue}"}, containerFactory = "onlineIdeListenerContainer")
-    public void receiveOnlineIdeRequest(String immediateMessageStr) {
+    public String receiveOnlineIdeRequest(String immediateMessageStr) {
         ImmediateJudge immediateJudge = JsonUtil.parse(immediateMessageStr, ImmediateJudge.class);
+        OnlineRunningCodeTask onlineRunningCodeTask = onlineRunningCodeTask();
+        onlineRunningCodeTask.setImmediateJudge(immediateJudge);
+        try {
+            IdeResult ideResult = onlineRunningCodeTask.runCode();
+            return JsonUtil.stringfy(ideResult);
+        } catch (InternalException | ExternalException e) {
+            return null;
+        }
+    }
 
-
-
-
+    @Lookup
+    public OnlineRunningCodeTask onlineRunningCodeTask() {
+        return null;
     }
 
 

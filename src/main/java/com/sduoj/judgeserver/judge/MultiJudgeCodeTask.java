@@ -40,7 +40,7 @@ public class MultiJudgeCodeTask extends AbstractJudgeCodeTask {
     }
 
     public void setJudgeRequest(MultiJudgeRequest judgeRequest) {
-        this.judgeRequest = judgeRequest;
+        this.judgeNecessaryInfo =  this.judgeRequest = judgeRequest;
         this.testPointIds = judgeRequest.getPointList();
     }
 

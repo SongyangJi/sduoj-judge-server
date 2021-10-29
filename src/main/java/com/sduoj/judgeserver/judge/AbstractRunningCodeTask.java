@@ -38,7 +38,7 @@ public abstract class AbstractRunningCodeTask {
 
 
     /**
-     * 预处理工作: 获得题目路径、创建文件夹、赋予写权限
+     * 预处理工作: 创建文件夹、赋予写权限
      */
     protected abstract void preTreatment() throws ProcessException, IOException;
 

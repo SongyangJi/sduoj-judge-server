@@ -17,8 +17,8 @@ import lombok.*;
 @Setter
 @Getter
 public class RunningDetails {
-    // 运行时间（CPU）
+    // 运行时间（CPU）毫秒
     private int time;
-    // 耗用内存
+    // 耗用内存(字节)
     private int memory;
 }

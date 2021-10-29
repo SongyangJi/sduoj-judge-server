@@ -17,3 +17,13 @@ public class RunningCodeInfo {
 
     String detailOfError;
 }
+
+/*
+{
+  "runningDetails": {
+    "time": 20,
+    "memory": 8
+  },
+  "detailOfError": "fake_data"
+}
+ */
